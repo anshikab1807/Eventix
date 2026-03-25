@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Simulate checking for a logged-in user in localStorage on mount
-    const storedUser = localStorage.getItem("eventrix-user");
+    const storedUser = localStorage.getItem("eventix-user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -17,12 +17,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("eventrix-user", JSON.stringify(userData));
+    localStorage.setItem("eventix-user", JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("eventrix-user");
+    localStorage.removeItem("eventix-user");
   };
 
   // Mock checking session

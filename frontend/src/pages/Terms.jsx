@@ -2,7 +2,7 @@ export default function Terms() {
   const terms = [
     {
       title: "Acceptance of Terms",
-      desc: "By accessing or using Eventrix, you agree to be bound by these Terms of Service. If you do not agree, please do not use our platform.",
+      desc: "By accessing or using eventix, you agree to be bound by these Terms of Service. If you do not agree, please do not use our platform.",
     },
     {
       title: "Use of Services",
@@ -18,7 +18,7 @@ export default function Terms() {
     },
     {
       title: "Limitation of Liability",
-      desc: "Eventrix is not liable for any indirect or consequential damages arising from the use of our platform.",
+      desc: "eventix is not liable for any indirect or consequential damages arising from the use of our platform.",
     },
     {
       title: "Changes to Terms",
@@ -35,14 +35,14 @@ export default function Terms() {
           Terms of <span className="text-gradient">Service</span>
         </h1>
         <p className="text-muted-foreground text-lg leading-relaxed">
-          Please read these terms carefully before using Eventrix. These guidelines ensure a safe and smooth experience for everyone.
+          Please read these terms carefully before using eventix. These guidelines ensure a safe and smooth experience for everyone.
         </p>
       </section>
 
       {/* Highlight Card */}
       <section className="bg-muted rounded-2xl p-8 text-center hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
         <p className="text-lg font-medium">
-          “Using Eventrix means you agree to follow our platform rules and respect our community.”
+          “Using eventix means you agree to follow our platform rules and respect our community.”
         </p>
       </section>
 

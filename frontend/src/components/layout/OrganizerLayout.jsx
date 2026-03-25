@@ -30,7 +30,7 @@ export function OrganizerLayout() {
               <CalendarDays className="h-5 w-5 text-white" />
             </div>
             <span className="text-xl font-bold tracking-tight text-gradient">
-              Eventrix Admin
+              eventix Admin
             </span>
           </Link>
         </div>
@@ -82,7 +82,7 @@ export function OrganizerLayout() {
             </div>
             <div className="overflow-hidden">
               <p className="text-sm font-medium text-foreground truncate">{user?.name || "Organizer"}</p>
-              <p className="text-xs text-muted-foreground truncate">{user?.email || "admin@eventrix.com"}</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.email || "admin@eventix.com"}</p>
             </div>
           </div>
           <Button variant="outline" className="w-full border-red-500/30 text-red-500 hover:bg-red-500/10 justify-start" onClick={() => logout()}>

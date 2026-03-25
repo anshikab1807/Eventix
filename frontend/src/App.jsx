@@ -33,7 +33,6 @@ import Terms from "./pages/Terms"
 import Privacy from "./pages/Privacy"
 import Cookies from "./pages/Cookies"
 import ScrollToTop from "./utills/ScrollToTop"
-import Pricing from "./pages/Pricing";
 
 
 function App() {
@@ -50,7 +49,6 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="events/:id" element={<EventDetailsPage />} />
-            {/* <Route path="favorites" element={<FavoritesPage />} /> */}
             
 
             {/* ✅ Added Footer Routes */}

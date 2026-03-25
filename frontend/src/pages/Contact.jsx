@@ -18,7 +18,7 @@ export default function Contact() {
           <h2 className="text-2xl font-semibold">Get in Touch</h2>
 
           <div className="space-y-4 text-muted-foreground">
-            <p>📧 Email: team@eventrix.com</p>
+            <p>📧 Email: team@eventix.com</p>
             <p>📞 Phone: +1 9876543210</p>
             <p>📍 Location: glauniversity</p>
           </div>

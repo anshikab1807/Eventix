@@ -5,10 +5,10 @@ export default function About() {
       {/* Hero Section */}
       <section className="text-center max-w-3xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold mb-6">
-          About <span className="text-gradient">Eventrix</span>
+          About <span className="text-gradient">eventix</span>
         </h1>
         <p className="text-muted-foreground text-lg leading-relaxed">
-          Eventrix is your all-in-one platform to discover, create, and manage unforgettable events — from local meetups to global experiences.
+          eventix is your all-in-one platform to discover, create, and manage unforgettable events — from local meetups to global experiences.
         </p>
       </section>
 
@@ -97,7 +97,7 @@ export default function About() {
       {/* CTA */}
       <section className="text-center">
         <h2 className="text-2xl font-semibold mb-4">
-          Join Eventrix Today
+          Join eventix Today
         </h2>
         <p className="text-muted-foreground mb-6">
           Start exploring events or host your own in just a few clicks.
