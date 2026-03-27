@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Check, ChevronRight, MapPin, Tag, Calendar, Image as ImageIcon, Ticket, Settings, ArrowRight, ArrowLeft } from "lucide-react"
+import { Check, ChevronRight, MapPin, Tag, Calendar, Image as ImageIcon, Ticket, Settings, ArrowRight, ArrowLeft} from "lucide-react"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
 import { Select } from "../components/ui/Select"
@@ -8,9 +8,8 @@ import { Card, CardContent } from "../components/ui/Card"
 const STEPS = [
   { id: 1, title: "Basic Info", icon: <Tag className="w-5 h-5" /> },
   { id: 2, title: "Description", icon: <ImageIcon className="w-5 h-5" /> },
-  { id: 3, title: "Tickets", icon: <Ticket className="w-5 h-5" /> },
-  { id: 4, title: "Agenda", icon: <Calendar className="w-5 h-5" /> },
-  { id: 5, title: "Settings", icon: <Settings className="w-5 h-5" /> },
+  { id: 3, title: "Agenda", icon: <Calendar className="w-5 h-5" /> },
+  { id: 4, title: "Settings", icon: <Settings className="w-5 h-5" /> },
 ]
 
 export function CreateEventPage() {
@@ -123,116 +122,64 @@ export function CreateEventPage() {
                 </div>
               </div>
             )}
+{/* STEP 2: Description & Image */}
+{currentStep === 2 && (
+  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold">Description & Media</h2>
+      <p className="text-muted-foreground">
+        Add details and images to make your event stand out.
+      </p>
+    </div>
 
-            {/* STEP 2: Description & Image */}
-            {currentStep === 2 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold">Description & Media</h2>
-                  <p className="text-muted-foreground">Add details and images to make your event stand out.</p>
-                </div>
+    <div className="space-y-6">
+      {/* Event Image */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Event Image / Banner</label>
+        <div className="border-2 border-dashed border-border rounded-xl p-12 text-center bg-background/50 hover:bg-muted/50 transition-colors cursor-pointer group">
+          <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+            <ImageIcon className="h-8 w-8 text-muted-foreground group-hover:text-brand-500 transition-colors" />
+          </div>
+          <p className="font-semibold text-foreground mb-1">
+            Click to upload or drag and drop
+          </p>
+          <p className="text-sm text-muted-foreground">
+            SVG, PNG, JPG or GIF (max. 800x400px)
+          </p>
+        </div>
+      </div>
 
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Event Image / Banner</label>
-                    <div className="border-2 border-dashed border-border rounded-xl p-12 text-center bg-background/50 hover:bg-muted/50 transition-colors cursor-pointer group">
-                      <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                        <ImageIcon className="h-8 w-8 text-muted-foreground group-hover:text-brand-500 transition-colors" />
-                      </div>
-                      <p className="font-semibold text-foreground mb-1">Click to upload or drag and drop</p>
-                      <p className="text-sm text-muted-foreground">SVG, PNG, JPG or GIF (max. 800x400px)</p>
-                    </div>
-                  </div>
+      {/* Event Description */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Event Description</label>
+        <div className="border border-input rounded-md overflow-hidden bg-background">
+          <div className="bg-muted border-b border-input p-2 flex gap-2">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 font-bold">B</Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 italic">I</Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 underline">U</Button>
+            <div className="w-px h-6 bg-border mx-1 self-center" />
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 px-2">H1</Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 px-2">H2</Button>
+          </div>
+          <textarea
+            className="w-full h-48 p-4 bg-transparent outline-none resize-y placeholder:text-muted-foreground/50"
+            placeholder="Describe your event..."
+          ></textarea>
+        </div>
+      </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Event Description</label>
-                    <div className="border border-input rounded-md overflow-hidden bg-background">
-                      {/* Rich Text Editor Toolbar Placeholder */}
-                      <div className="bg-muted border-b border-input p-2 flex gap-2">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 font-bold">B</Button>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 italic">I</Button>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 underline">U</Button>
-                        <div className="w-px h-6 bg-border mx-1 self-center" />
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 px-2">H1</Button>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 px-2">H2</Button>
-                      </div>
-                      <textarea 
-                        className="w-full h-48 p-4 bg-transparent outline-none resize-y placeholder:text-muted-foreground/50" 
-                        placeholder="Describe your event..."
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 3: Tickets */}
-            {currentStep === 3 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold">Ticketing Options</h2>
-                  <p className="text-muted-foreground">Create free or paid ticket tiers for attendees.</p>
-                </div>
-
-                <div className="space-y-4">
-                  {/* Ticket Card 1 */}
-                  <div className="border border-border/60 bg-background/50 rounded-xl p-5 flex flex-col sm:flex-row gap-4 relative">
-                    <Button variant="ghost" size="sm" className="absolute top-2 right-2 text-red-500 hover:text-red-600 hover:bg-red-500/10">Remove</Button>
-                    <div className="flex-1 space-y-4 pt-4 sm:pt-0 border-t sm:border-t-0 border-border mt-4 sm:mt-0">
-                      <div className="space-y-2">
-                         <label className="text-xs font-semibold uppercase text-muted-foreground">Ticket Name</label>
-                         <Input defaultValue="General Admission" className="font-semibold" />
-                      </div>
-                      
-                      <div className="flex gap-4">
-                        <div className="flex-1 space-y-2">
-                          <label className="text-xs font-semibold uppercase text-muted-foreground">Price ($)</label>
-                          <Input type="number" defaultValue="49.99" />
-                        </div>
-                        <div className="flex-1 space-y-2">
-                          <label className="text-xs font-semibold uppercase text-muted-foreground">Quantity Available</label>
-                          <Input type="number" defaultValue="200" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button variant="outline" className="w-full border-dashed border-2 py-8 hover:bg-brand-500/5 hover:border-brand-500 hover:text-brand-500 transition-colors">
-                    <PlusCircle className="mr-2 h-5 w-5" />
-                    Add Another Ticket Tier
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {/* Steps 4 and 5 placeholders for brevity */}
-            {currentStep === 4 && (
-              <div className="space-y-6 text-center py-20 animate-in fade-in slide-in-from-right-4 duration-300">
-                <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-                <h2 className="text-2xl font-bold">Agenda & Speakers</h2>
-                <p className="text-muted-foreground max-w-md mx-auto">Build an interactive schedule and add speaker profiles to your event details page.</p>
-                <Button variant="outline" className="mt-4"><PlusCircle className="mr-2 h-4 w-4"/> Add Session</Button>
-              </div>
-            )}
-
-            {currentStep === 5 && (
-              <div className="space-y-6 text-center py-20 animate-in fade-in slide-in-from-right-4 duration-300">
-                <Settings className="h-16 w-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-                <h2 className="text-2xl font-bold">Event Settings</h2>
-                <p className="text-muted-foreground max-w-md mx-auto">Configure privacy, capacity limits, and custom registration questions.</p>
-                
-                <div className="max-w-md mx-auto text-left bg-background p-6 rounded-xl border mt-8 space-y-4">
-                   <label className="flex items-center gap-3 cursor-pointer">
-                     <input type="checkbox" className="w-5 h-5 rounded border-border text-brand-500" defaultChecked />
-                     <span>Make event public (Visible in search)</span>
-                   </label>
-                   <label className="flex items-center gap-3 cursor-pointer">
-                     <input type="checkbox" className="w-5 h-5 rounded border-border text-brand-500" />
-                     <span>Hide attendee list</span>
-                   </label>
-                </div>
-              </div>
-            )}
+      {/* Ticket Price */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Ticket Price (₹)</label>
+        <Input
+          type="number"
+          placeholder="Enter price (e.g. 500)"
+          className="bg-card border-border"
+        />
+      </div>
+    </div>
+  </div>
+)}
 
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-10 pt-6 border-t border-border">

@@ -7,13 +7,13 @@ import { Badge } from "../components/ui/Badge"
 import { Select } from "../components/ui/Select"
 
 const ATTENDEES = [
-  { id: "USR-001", name: "Alex Johnson", email: "alex.j@example.com", event: "Neon Nights Music Festival", ticket: "VIP Access", date: "Aug 01, 2026", status: "Confirmed" },
-  { id: "USR-002", name: "Maria Garcia", email: "m.garcia99@example.com", event: "Neon Nights Music Festival", ticket: "General Admission", date: "Aug 02, 2026", status: "Confirmed" },
-  { id: "USR-003", name: "James Wilson", email: "jwilson.tech@example.com", event: "Tech Startup Pitch Night", ticket: "Investor Pass", date: "Aug 15, 2026", status: "Confirmed" },
-  { id: "USR-004", name: "Sophie Chen", email: "sophie.c@example.com", event: "Web3 Developer Summit", ticket: "Early Bird", date: "Jul 20, 2026", status: "Cancelled" },
-  { id: "USR-005", name: "David Miller", email: "dmiller84@example.com", event: "Yoga & Mindfulness Retreat", ticket: "Standard Registration", date: "Sep 05, 2026", status: "Pending" },
-  { id: "USR-006", name: "Emma Thompson", email: "emma.t.design@example.com", event: "Neon Nights Music Festival", ticket: "General Admission", date: "Aug 10, 2026", status: "Confirmed" },
-  { id: "USR-007", name: "Robert Taylor", email: "rtaylor.music@example.com", event: "Tech Startup Pitch Night", ticket: "Standard Registration", date: "Aug 18, 2026", status: "Confirmed" },
+  { id: "USR-001", name: "Alex Johnson", email: "alex.j@example.com", event: "Neon Nights Music Festival", date: "Aug 01, 2026", status: "Confirmed" },
+  { id: "USR-002", name: "Maria Garcia", email: "m.garcia99@example.com", event: "Neon Nights Music Festival", date: "Aug 02, 2026", status: "Confirmed" },
+  { id: "USR-003", name: "James Wilson", email: "jwilson.tech@example.com", event: "Tech Startup Pitch Night",date: "Aug 15, 2026", status: "Confirmed" },
+  { id: "USR-004", name: "Sophie Chen", email: "sophie.c@example.com", event: "Web3 Developer Summit", date: "Jul 20, 2026", status: "Cancelled" },
+  { id: "USR-005", name: "David Miller", email: "dmiller84@example.com", event: "Yoga & Mindfulness Retreat",date: "Sep 05, 2026", status: "Pending" },
+  { id: "USR-006", name: "Emma Thompson", email: "emma.t.design@example.com", event: "Neon Nights Music Festival",date: "Aug 10, 2026", status: "Confirmed" },
+  { id: "USR-007", name: "Robert Taylor", email: "rtaylor.music@example.com", event: "Tech Startup Pitch Night", date: "Aug 18, 2026", status: "Confirmed" },
 ]
 
 export function OrganizerAttendeesPage() {

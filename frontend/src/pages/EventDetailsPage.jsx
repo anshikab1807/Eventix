@@ -46,7 +46,7 @@ export function EventDetailsPage() {
           alt={event.title} 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 to-transparent" />
         
         <div className="absolute bottom-0 w-full">
           <div className="container mx-auto px-4 max-w-5xl pb-10">
