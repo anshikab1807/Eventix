@@ -1,5 +1,5 @@
 import express from 'express';
-import { createEvent, getEvents, getEventById, updateEvent, deleteEvent } from '../controllers/event.controllers.js';
+import { createEvent, getEvents, getEventById, updateEvent, deleteEvent, getEventsbyOrganizer } from '../controllers/event.controllers.js';
 import protect from '../middlewares/auth.middlewares.js';
 import organizer from '../middlewares/organizer.middlewares.js';
 import upload from '../config/multer.js';
@@ -15,6 +15,11 @@ router.post('/', protect, organizer, upload.single('image'), createEvent);
 // @desc Get all events
 // @access public
 router.get('/all', getEvents);
+
+// @route GET /events/organizer
+// @desc Get all events by organizer
+// @access private
+router.get('/organizer', protect, organizer, getEventsbyOrganizer);
 
 // @route GET /events/:id
 // @desc Get event by ID

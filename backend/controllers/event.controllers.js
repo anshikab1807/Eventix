@@ -105,6 +105,21 @@ const getEventById = async (req, res) => {
     }
 }
 
+const getEventsByOrganizer = async (req, res) => {
+  try {
+    const events = await Event.find({organizer: req.user._id});
+
+    res.status(200).json({
+      success: true,
+      message: 'Event updated successfully',
+      events: events
+  });    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
+
 const updateEvent = async (req, res) => {
     try {
         const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
