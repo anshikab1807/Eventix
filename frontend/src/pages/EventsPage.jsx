@@ -18,6 +18,7 @@ const ALL_EVENTS = Array.from({ length: 12 }).map((_, i) => ({
     "Digital Art Exhibition", "Marathon Prep Workshop", "Comedy Club Special"
   ][i],
   date: new Date(2026, 7 + (i % 3), 15 + i).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+  rawDate: new Date(2026, 7 + (i % 3), 15 + i), // keep raw date for filtering
   location: ["Los Angeles", "San Francisco", "New York", "Seattle", "Austin", "Chicago"][i % 6] + ", USA",
   price: i % 4 === 0 ? "Free" : `$${(i * 15 + 45)}`,
   ticketsRemaining: Math.floor(Math.random() * 200) + 10,
@@ -33,70 +34,174 @@ const ALL_EVENTS = Array.from({ length: 12 }).map((_, i) => ({
   category: ["Concert", "Conference", "Workshop", "Meetup", "Health", "Business"][i % 6]
 }))
 
+// Mini calendar component
+function MiniCalendar({ selectedDate, onDateSelect }) {
+  const [viewDate, setViewDate] = useState(selectedDate || new Date())
+
+  const year = viewDate.getFullYear()
+  const month = viewDate.getMonth()
+
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+  const dayNames = ["Su","Mo","Tu","We","Th","Fr","Sa"]
+
+  const firstDay = new Date(year, month, 1).getDay()
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+  const prevMonth = () => setViewDate(new Date(year, month - 1, 1))
+  const nextMonth = () => setViewDate(new Date(year, month + 1, 1))
+
+  const isSelected = (day) => {
+    if (!selectedDate) return false
+    return (
+      selectedDate.getFullYear() === year &&
+      selectedDate.getMonth() === month &&
+      selectedDate.getDate() === day
+    )
+  }
+
+  const isToday = (day) => {
+    const today = new Date()
+    return today.getFullYear() === year && today.getMonth() === month && today.getDate() === day
+  }
+
+  const handleDayClick = (day) => {
+    const clicked = new Date(year, month, day)
+    if (selectedDate && isSelected(day)) {
+      onDateSelect(null) // deselect if same date clicked
+    } else {
+      onDateSelect(clicked)
+    }
+  }
+
+  const cells = []
+  for (let i = 0; i < firstDay; i++) cells.push(null)
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d)
+
+  return (
+    <div className="rounded-xl border border-border/40 bg-card/60 p-3 text-sm select-none">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3">
+        <button
+          onClick={prevMonth}
+          className="p-1 rounded-lg hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        <span className="font-semibold text-foreground">
+          {monthNames[month]} {year}
+        </span>
+        <button
+          onClick={nextMonth}
+          className="p-1 rounded-lg hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* Day labels */}
+      <div className="grid grid-cols-7 mb-1">
+        {dayNames.map(d => (
+          <div key={d} className="text-center text-xs text-muted-foreground py-1 font-medium">{d}</div>
+        ))}
+      </div>
+
+      {/* Day cells */}
+      <div className="grid grid-cols-7 gap-y-0.5">
+        {cells.map((day, idx) =>
+          day === null ? (
+            <div key={`empty-${idx}`} />
+          ) : (
+            <button
+              key={day}
+              onClick={() => handleDayClick(day)}
+              className={`
+                mx-auto flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium transition-all
+                ${isSelected(day)
+                  ? "bg-brand-500 text-white shadow-md shadow-brand-500/30"
+                  : isToday(day)
+                  ? "border border-brand-500/50 text-brand-400 hover:bg-brand-500/20"
+                  : "text-muted-foreground hover:bg-white/10 hover:text-foreground"
+                }
+              `}
+            >
+              {day}
+            </button>
+          )
+        )}
+      </div>
+
+      {/* Clear selection */}
+      {selectedDate && (
+        <button
+          onClick={() => onDateSelect(null)}
+          className="mt-3 w-full text-xs text-muted-foreground hover:text-foreground text-center py-1 rounded-lg hover:bg-white/5 transition-colors"
+        >
+          Clear date
+        </button>
+      )}
+    </div>
+  )
+}
+
 export function EventsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const initialCategory = searchParams.get("category")
-  const initialLocation = searchParams.get("location")
-
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [sortOrder, setSortOrder] = useState("newest")
-  const [location, setLocation] = useState(initialLocation || "")
   const [categories, setCategories] = useState(initialCategory ? [initialCategory] : [])
-  const [date, setDate] = useState("")
+  const [selectedDate, setSelectedDate] = useState(null) // now a Date object or null
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [price, setPrice] = useState("any")
+
+  const updateURL = (newState) => {
+    const params = new URLSearchParams()
+    if (newState.categories.length > 0) params.set("category", newState.categories.join(","))
+    if (newState.selectedDate) params.set("date", newState.selectedDate.toISOString().split("T")[0])
+    if (newState.price !== "any") params.set("price", newState.price)
+    if (searchQuery) params.set("search", searchQuery)
+    if (sortOrder !== "newest") params.set("sort", sortOrder)
+    setSearchParams(params)
+  }
 
   useEffect(() => {
     if (initialCategory) {
       setCategories(prev => prev.includes(initialCategory) ? prev : [...prev, initialCategory])
     }
-    if (initialLocation) {
-      setLocation(initialLocation)
-    }
-  }, [initialCategory, initialLocation])
+  }, [initialCategory])
 
   const filteredEvents = ALL_EVENTS.filter((event) => {
-    if (searchQuery && !event.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    if (location && !event.location.toLowerCase().includes(location.toLowerCase())) return false;
-    if (categories.length > 0 && !categories.includes(event.category)) return false;
-    if (price === "free" && event.price !== "Free") return false;
-    if (price === "paid" && event.price === "Free") return false;
-    if (date) {
-      const eventDate = new Date(event.date);
-      const today = new Date();
-      if (date === "today") {
-          if (eventDate.toDateString() !== today.toDateString()) return false;
-      } else if (date === "tomorrow") {
-          const tomorrow = new Date(today);
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          if (eventDate.toDateString() !== tomorrow.toDateString()) return false;
-      } else if (date === "weekend") {
-          const day = eventDate.getDay();
-          if (day !== 0 && day !== 6) return false;
-          const diffDays = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
-          if (diffDays > 7 || diffDays < 0) return false;
-      } else if (date === "month") {
-          if (eventDate.getMonth() !== today.getMonth() || eventDate.getFullYear() !== today.getFullYear()) return false;
-      }
+    if (searchQuery && !event.title.toLowerCase().includes(searchQuery.toLowerCase())) return false
+    if (categories.length > 0 && !categories.includes(event.category)) return false
+    if (price === "free" && event.price !== "Free") return false
+    if (price === "paid" && event.price === "Free") return false
+    if (selectedDate) {
+      // Filter: show only events whose rawDate matches the selected calendar date
+      const ed = event.rawDate
+      if (
+        ed.getFullYear() !== selectedDate.getFullYear() ||
+        ed.getMonth() !== selectedDate.getMonth() ||
+        ed.getDate() !== selectedDate.getDate()
+      ) return false
     }
-    return true;
+    return true
   }).sort((a, b) => {
     if (sortOrder === "price_low") {
-      const priceA = a.price === "Free" ? 0 : parseInt(a.price.replace('$', ''));
-      const priceB = b.price === "Free" ? 0 : parseInt(b.price.replace('$', ''));
-      return priceA - priceB;
+      const priceA = a.price === "Free" ? 0 : parseInt(a.price.replace('$', ''))
+      const priceB = b.price === "Free" ? 0 : parseInt(b.price.replace('$', ''))
+      return priceA - priceB
     }
     if (sortOrder === "price_high") {
-      const priceA = a.price === "Free" ? 0 : parseInt(a.price.replace('$', ''));
-      const priceB = b.price === "Free" ? 0 : parseInt(b.price.replace('$', ''));
-      return priceB - priceA;
+      const priceA = a.price === "Free" ? 0 : parseInt(a.price.replace('$', ''))
+      const priceB = b.price === "Free" ? 0 : parseInt(b.price.replace('$', ''))
+      return priceB - priceA
     }
-    if (sortOrder === "popular") {
-      return a.ticketsRemaining - b.ticketsRemaining;
-    }
-    return b.id - a.id;
-  });
-  
+    if (sortOrder === "popular") return a.ticketsRemaining - b.ticketsRemaining
+    // Default: sort by date ascending when a date is selected, else newest by id
+    if (selectedDate) return a.rawDate - b.rawDate
+    return b.id - a.id
+  })
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -152,25 +257,7 @@ export function EventsPage() {
           </div>
 
           <div className="space-y-6">
-            <div className="space-y-3">
-              <h3 className="font-semibold flex items-center gap-2">
-                <MapPin className="h-4 w-4" /> Location
-              </h3>
-              <Select 
-                className="bg-card"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              >
-                <option value="">Any Location</option>
-                <option value="new york">New York</option>
-                <option value="los angeles">Los Angeles</option>
-                <option value="san francisco">San Francisco</option>
-                <option value="seattle">Seattle</option>
-                <option value="austin">Austin</option>
-                <option value="chicago">Chicago</option>
-              </Select>
-            </div>
-
+            {/* ── Category ── */}
             <div className="space-y-3">
               <h3 className="font-semibold flex items-center gap-2">
                 <Tag className="h-4 w-4" /> Category
@@ -183,8 +270,11 @@ export function EventsPage() {
                       className="rounded border-border text-brand-500 bg-card/50" 
                       checked={categories.includes(cat)}
                       onChange={(e) => {
-                        if (e.target.checked) setCategories([...categories, cat]);
-                        else setCategories(categories.filter(c => c !== cat));
+                        const updated = e.target.checked
+                          ? [...categories, cat]
+                          : categories.filter(c => c !== cat)
+                        setCategories(updated)
+                        updateURL({ categories: updated, selectedDate, price })
                       }}
                     />
                     <span className="text-muted-foreground hover:text-foreground">{cat}</span>
@@ -193,59 +283,67 @@ export function EventsPage() {
               </div>
             </div>
 
+            {/* ── Date — Calendar picker ── */}
             <div className="space-y-3">
               <h3 className="font-semibold flex items-center gap-2">
                 <Calendar className="h-4 w-4" /> Date
               </h3>
-              <Select 
-                className="bg-card"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+              {/* Toggle button */}
+              <button
+                onClick={() => setIsCalendarOpen(prev => !prev)}
+                className={`
+                  w-full flex items-center justify-between px-3 py-2 rounded-lg border text-sm transition-all
+                  ${selectedDate
+                    ? "border-brand-500/60 bg-brand-500/10 text-brand-400"
+                    : "border-border/40 bg-card/60 text-muted-foreground hover:text-foreground hover:border-border"
+                  }
+                `}
               >
-                <option value="">Any Time</option>
-                <option value="today">Today</option>
-                <option value="tomorrow">Tomorrow</option>
-                <option value="weekend">This Weekend</option>
-                <option value="month">This Month</option>
-              </Select>
+                <span>
+                  {selectedDate
+                    ? selectedDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+                    : "Pick a date…"}
+                </span>
+                <ChevronRight className={`h-4 w-4 transition-transform duration-200 ${isCalendarOpen ? "rotate-90" : ""}`} />
+              </button>
+
+              {/* Collapsible calendar */}
+              {isCalendarOpen && (
+                <MiniCalendar
+                  selectedDate={selectedDate}
+                  onDateSelect={(date) => {
+                    setSelectedDate(date)
+                    updateURL({ categories, selectedDate: date, price })
+                    if (date) setIsCalendarOpen(false) // auto-close on selection
+                  }}
+                />
+              )}
             </div>
 
+            {/* ── Price ── */}
             <div className="space-y-3">
               <h3 className="font-semibold">Price</h3>
               <div className="space-y-2">
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="price" 
-                    value="any"
-                    checked={price === "any"}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="border-border text-brand-500 bg-card/50 focus:ring-brand-500" 
-                  />
-                  <span className="text-muted-foreground">Any Price</span>
-                </label>
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="price" 
-                    value="free"
-                    checked={price === "free"}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="border-border text-brand-500 bg-card/50 focus:ring-brand-500" 
-                  />
-                  <span className="text-muted-foreground">Free</span>
-                </label>
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="price" 
-                    value="paid"
-                    checked={price === "paid"}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="border-border text-brand-500 bg-card/50 focus:ring-brand-500" 
-                  />
-                  <span className="text-muted-foreground">Paid</span>
-                </label>
+                {[
+                  { value: "any", label: "Any Price" },
+                  { value: "free", label: "Free" },
+                  { value: "paid", label: "Paid" },
+                ].map(({ value, label }) => (
+                  <label key={value} className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="price" 
+                      value={value}
+                      checked={price === value}
+                      onChange={(e) => {
+                        setPrice(e.target.value)
+                        updateURL({ categories, selectedDate, price: e.target.value })
+                      }}
+                      className="border-border text-brand-500 bg-card/50 focus:ring-brand-500" 
+                    />
+                    <span className="text-muted-foreground">{label}</span>
+                  </label>
+                ))}
               </div>
             </div>
 
@@ -253,13 +351,13 @@ export function EventsPage() {
               variant="outline" 
               className="w-full text-muted-foreground"
               onClick={() => {
-                setSearchQuery("");
-                setSortOrder("newest");
-                setLocation("");
-                setCategories([]);
-                setDate("");
-                setPrice("any");
-                setSearchParams(new URLSearchParams());
+                setSearchQuery("")
+                setSortOrder("newest")
+                setCategories([])
+                setSelectedDate(null)
+                setIsCalendarOpen(false)
+                setPrice("any")
+                setSearchParams({})
               }}
             >
               Clear All Filters
